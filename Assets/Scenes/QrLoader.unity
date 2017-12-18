@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 11}
   - component: {fileID: 20}
   - component: {fileID: 22}
+  - component: {fileID: 19}
   m_Layer: 0
   m_Name: ObjectManager
   m_TagString: Untagged
@@ -325,6 +326,18 @@ GUIText:
     rgba: 4294967295
   m_PixelCorrect: 1
   m_RichText: 1
+--- !u!114 &19
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 7}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4f152827b9524258bbdea6f1488df5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  url: 
 --- !u!114 &20
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,8 +392,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 7}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6eb89cfdc3cfb4c97967cbf854efb888, type: 3}
+  m_Script: {fileID: 11500000, guid: f39524e297b1b4406b2e66d813431b8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   objFileName: http://www.starscenesoftware.com/objtest/Spot.obj
-  standardMaterial: {fileID: 2100000, guid: 3534237fb47ab4ef092dd24b64a28c06, type: 2}
+  standardMaterial: {fileID: 0}

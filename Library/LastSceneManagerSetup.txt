@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/offline.unity
+- path: Assets/Scenes/QrLoader.unity
   isLoaded: 1
   isActive: 1
