@@ -3,77 +3,64 @@
 using UnityEngine;
 using System.Collections;
 
-public class objLoader : MonoBehaviour {
-	
-	GameObject thePlayer;
-	public string objFileName = "http://www.starscenesoftware.com/objtest/Spot.obj";
 
-	public Material standardMaterial;	// Used if the OBJ file has no MTL file
-	ObjReader.ObjData objData;
-	string loadingText = "";
-	bool loading = false;
 
-	IEnumerator Load () {
-		loading = true;
-		if (objData != null && objData.gameObjects != null) {
-			for (var i = 0; i < objData.gameObjects.Length; i++) {
-				Destroy (objData.gameObjects[i]);
+namespace UnityEngine.XR.iOS
+{
+	public class objLoader : MonoBehaviour {
+		
+		GameObject thePlayer;
+		public string objFileName = "http://www.starscenesoftware.com/objtest/Spot.obj";
+
+		public Material standardMaterial;	// Used if the OBJ file has no MTL file
+		public ObjReader.ObjData objData;
+		string loadingText = "";
+		bool loading = false;
+
+		IEnumerator Load () {
+			loading = true;
+			if (objData != null && objData.gameObjects != null) {
+				for (var i = 0; i < objData.gameObjects.Length; i++) {
+					Destroy (objData.gameObjects[i]);
+				}
 			}
-		}
 
-		objData = ObjReader.use.ConvertFileAsync (objFileName, true, standardMaterial);
-		while (!objData.isDone) {
-			loadingText = "Loading... " + (objData.progress*100).ToString("f0") + "%";
-			if (Input.GetKeyDown (KeyCode.Escape)) {
-				objData.Cancel();
-				loadingText = "Cancelled download";
-				loading = false;
+			objData = ObjReader.use.ConvertFileAsync (objFileName, true, standardMaterial);
+			while (!objData.isDone) {
+				loadingText = "Loading... " + (objData.progress*100).ToString("f0") + "%";
+				if (Input.GetKeyDown (KeyCode.Escape)) {
+					objData.Cancel();
+					loadingText = "Cancelled download";
+					loading = false;
+					yield break;
+				}
+				yield return null;
+			}
+			loading = false;
+			if (objData == null || objData.gameObjects == null) {
+				loadingText = "Error loading file";
+				yield return null;
 				yield break;
 			}
-			yield return null;
-		}
-		loading = false;
-		if (objData == null || objData.gameObjects == null) {
-			loadingText = "Error loading file";
-			yield return null;
-			yield break;
+			foreach(GameObject gam in objData.gameObjects){
+				gam.transform.position = new Vector3 (-10,0,0);
+			}
+			loadingText = "Import completed";
 		}
 
-		loadingText = "Import completed";
-		//FocusOnObjects();
+		void OnGUI () {
+			thePlayer = GameObject.Find("ObjManager");
+			GUILayout.BeginArea (new Rect(10, 10, 400, 400));
+			objFileName = GUILayout.TextField (objFileName, GUILayout.Width(400));
+			if(thePlayer.GetComponent<qrcode_reader>().url != null ){
+				objFileName = thePlayer.GetComponent<qrcode_reader>().url;
+			}
+			if (GUILayout.Button ("Import") && !loading) {
+				StartCoroutine (Load());
+			}
+			GUILayout.Label (loadingText);
+			GUILayout.EndArea();
+		}
+			
 	}
-
-	void OnGUI () {
-		thePlayer = GameObject.Find("ObjectManager");
-		GUILayout.BeginArea (new Rect(0, 0, 400, 400));
-		objFileName = GUILayout.TextField (objFileName, GUILayout.Width(400));
-		//GUILayout.Label ("Also try pig.obj, car.obj, and cube.obj");
-		if(thePlayer.GetComponent<qrcode_reader>().url != null){
-			objFileName = thePlayer.GetComponent<qrcode_reader>().url;
-		}
-		if (GUILayout.Button ("Import") && !loading) {
-			StartCoroutine (Load());
-		}
-		GUILayout.Label (loadingText);
-		GUILayout.EndArea();
-	}
-
-	/*
-	void FocusOnObjects () {
-		var cam = Camera.main;
-		var bounds = new Bounds(objData.gameObjects[0].transform.position, Vector3.zero);
-		for (var i = 0; i < objData.gameObjects.Length; i++) {
-			bounds.Encapsulate (objData.gameObjects[i].GetComponent<Renderer>().bounds);
-		}
-
-		var maxSize = bounds.size;
-		var radius = maxSize.magnitude / 2.0f;
-		var horizontalFOV = 2.0f * Mathf.Atan (Mathf.Tan (cam.fieldOfView * Mathf.Deg2Rad / 2.0f) * cam.aspect) * Mathf.Rad2Deg;
-		var fov = Mathf.Min (cam.fieldOfView, horizontalFOV);
-		var distance = radius / Mathf.Sin (fov * Mathf.Deg2Rad / 2.0f);
-
-		cam.transform.position = bounds.center;
-		cam.transform.Translate (-Vector3.forward * distance);
-		cam.transform.LookAt (bounds.center);
-	}*/
 }
