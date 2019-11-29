@@ -14,3 +14,5 @@ Sample Video:
 https://drive.google.com/open?id=1JviFbp3VHttndi-TrKdd2Sq2dsmWzlvh
 
 
+If you appreciate this work, or want to know more about it or other projects by me, please visit my research blog:
+https://b04902041.wixsite.com/index
